@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace KataOrm.MetaStore
@@ -56,11 +57,28 @@ namespace KataOrm.MetaStore
 
         public string GetSelectTableForAllFields()
         {
-            StringBuilder selectBuilder = new StringBuilder("SELECT ");
+            StringBuilder selectBuilder = new StringBuilder("SELECT " + Escape(PrimaryKey.Name + ", "));
             AddReferenceColumns(selectBuilder);
             AddRegularColumns(selectBuilder);
+            RemoveLastCommaAndSpaceIfThereAreAnyColumns(selectBuilder);
+            selectBuilder.Append(" FROM " + Escape(TableName));
             return selectBuilder.ToString();
         }
+
+        private void RemoveLastCommaAndSpaceIfThereAreAnyColumns(StringBuilder selectBuilder)
+        {
+            if((ColumnInfos.Count() + References.Count() )> 0)
+            {
+                RemoveLastCharacters(selectBuilder, 2);
+            }
+        }
+
+
+        private void RemoveLastCharacters(StringBuilder stringBuilder, int numberOfCharacters)
+        {
+            stringBuilder.Remove(stringBuilder.Length - numberOfCharacters, numberOfCharacters);
+        }
+
 
         private void AddReferenceColumns(StringBuilder selectBuilder)
         {

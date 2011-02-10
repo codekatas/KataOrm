@@ -45,6 +45,7 @@
     </CodeAnalysisDependentAssemblyPaths>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helper\TextHelper.cs" />
     <Compile Include="MetaInfo\MetaInfoStoreTests.cs" />
     <Compile Include="MetaInfo\TableInfoTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

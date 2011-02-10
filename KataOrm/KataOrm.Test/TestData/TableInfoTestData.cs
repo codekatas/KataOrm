@@ -34,5 +34,10 @@ namespace KataOrm.Test.TestData
     [Table("TableInfoTestsThree")]
     public class TableInfoTestsThree
     {
+        [PrimaryKey("TableKey")]
+        public int TableKey { get; set; }
+
+        [Column("ColumnOne")]
+        public string ColumnOne { get; set; }
     }
 }
