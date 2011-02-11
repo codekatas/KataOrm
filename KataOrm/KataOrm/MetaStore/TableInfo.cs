@@ -100,5 +100,69 @@ namespace KataOrm.MetaStore
         {
             return "[" + name + "]";
         }
+
+        public string GetInsertStatement()
+        {
+            StringBuilder insertStatementBuilder = new StringBuilder();
+            insertStatementBuilder.Append("INSERT INTO " + Escape(TableName) + " (");
+            AddReferenceColumns(insertStatementBuilder);
+            AddRegularColumns(insertStatementBuilder);
+            RemoveLastCommaAndSpaceIfThereAreAnyColumns(insertStatementBuilder);
+            insertStatementBuilder.Append(" ) VALUES (");
+            AddReferenceColumnParameterNames(insertStatementBuilder);
+            AddRegularColumnParameterNames(insertStatementBuilder);
+            RemoveLastCommaAndSpaceIfThereAreAnyColumns(insertStatementBuilder);
+            insertStatementBuilder.Append("); SELECT SCOPE_IDENTITY");
+            return insertStatementBuilder.ToString();
+        }
+
+        private void AddReferenceColumnParameterNames(StringBuilder insertStatementBuilder)
+        {
+            foreach (var reference in References)
+            {
+                insertStatementBuilder.Append("@" + reference.Name + ", ");
+            }
+        }
+
+        private void AddRegularColumnParameterNames(StringBuilder insertStatementBuilder)
+        {
+            foreach (var columnInfo in ColumnInfos)
+            {
+                insertStatementBuilder.Append("@" + columnInfo.Name + ", ");
+            }
+        }
+
+
+        public string GetUpdateStatement()
+        {
+            var updateStatement = new StringBuilder();
+            updateStatement.Append("UPDATE " + Escape(TableName) + " SET ");
+            AddReferenceColumnsNamesWithParameterName(updateStatement);
+            AddRegularColumnsNamesWithParameterName(updateStatement);
+            RemoveLastCommaAndSpaceIfThereAreAnyColumns(updateStatement);
+            AddWhereClauseOnId(updateStatement);
+            return updateStatement.ToString();
+        }
+
+        private void AddWhereClauseOnId(StringBuilder updateStatement)
+        {
+            updateStatement.Append(" WHERE " + Escape(PrimaryKey.Name) + " = @" + PrimaryKey.Name);
+        }
+
+        private void AddRegularColumnsNamesWithParameterName(StringBuilder updateStatement)
+        {
+            foreach (var columnInfo in ColumnInfos)
+            {
+                updateStatement.Append(Escape(columnInfo.Name) + " = @" + columnInfo.Name + ", ");
+            }
+        }
+
+        private void AddReferenceColumnsNamesWithParameterName(StringBuilder updateStatement)
+        {
+            foreach (var reference in References)
+            {
+                updateStatement.Append(Escape(reference.Name) + " = @" + reference.Name + ", ");
+            } 
+        }
     }
 }

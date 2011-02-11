@@ -9,7 +9,7 @@ namespace KataOrm.Test.MetaInfo
     public class MetaInfoStoreTests
     {
         [TestMethod]
-        public void Should_load_table_info_items_when_asked_to_build_metainfo_for_Assemble()
+        public void Should_load_table_info_items_when_asked_to_build_metainfo_for_Assembly()
         {
             //Arrange
             var metaInfoStore = new MetaInfoStore();
@@ -20,7 +20,7 @@ namespace KataOrm.Test.MetaInfo
             //Assert
 
             int resultCount = metaInfoStore.TableInfos.Where(x => x.Key.Name.Contains("TableInfoTests")).Count();
-            Assert.AreEqual(3, resultCount);
+            Assert.AreEqual(4, resultCount);
         }
 
         [TestMethod]
