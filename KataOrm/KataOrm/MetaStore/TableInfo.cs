@@ -164,5 +164,76 @@ namespace KataOrm.MetaStore
                 updateStatement.Append(Escape(reference.Name) + " = @" + reference.Name + ", ");
             } 
         }
+
+        public string GetCreateStatement()
+        {
+            StringBuilder createStatementBuilder = new StringBuilder();
+            createStatementBuilder.AppendLine("SET ANSI_NULLS ON");
+            AddGoStatement(createStatementBuilder);
+
+            createStatementBuilder.AppendLine("SET QUOTED_IDENTIFIER ON");
+            AddGoStatement(createStatementBuilder);
+
+            createStatementBuilder.AppendLine("CREATE TABLE [dbo]." + Escape(TableName) + "(");
+            AddPrimaryKeyForSchemaCreate(createStatementBuilder);
+            AddRegularColumnsForSchemaCreate(createStatementBuilder);
+            AddForiegnKeyColumnsForSchemaCreate(createStatementBuilder);
+            AddPrimaryKeyConstraint(createStatementBuilder);
+            createStatementBuilder.AppendLine(" )");
+            createStatementBuilder.AppendLine("ON [PRIMARY]");
+            AddGoStatement(createStatementBuilder);
+            AddForeignKeyConstraints(createStatementBuilder);
+            return createStatementBuilder.ToString();
+        }
+
+        private void AddForeignKeyConstraints(StringBuilder createStatementBuilder)
+        {
+            foreach (var reference in References)
+            {
+                string constraintName = Escape("FK_" + TableName + "_" + reference.DotNetType.Name);
+                createStatementBuilder.AppendLine("ALTER TABLE [dbo]." + Escape(reference.Name) +
+                                                  " WITH CHECK ADD  CONSTRAINT " +
+                                                  constraintName + "FOREIGN KEY(" +
+                                                  Escape(reference.Name) + ")");
+                createStatementBuilder.AppendLine("REFERENCES [dbo]." + Escape(reference.DotNetType.Name) + " (" + Escape(reference.Name) +")");
+                AddGoStatement(createStatementBuilder);
+
+                createStatementBuilder.AppendLine("ALTER TABLE [dbo]." + Escape(TableName) + " CHECK CONSTRAINT " + constraintName);
+                AddGoStatement(createStatementBuilder);
+            }
+        }
+
+        private void AddForiegnKeyColumnsForSchemaCreate(StringBuilder createStatementBuilder)
+        {
+            foreach (var reference in References)
+            {
+                createStatementBuilder.AppendLine(Escape(reference.Name) + " " + Escape(reference.DbType.ToString()) + " NULL, ");
+            }
+        }
+
+        private void AddGoStatement(StringBuilder createStatementBuilder)
+        {
+            createStatementBuilder.AppendLine("GO");
+        }
+
+        private void AddPrimaryKeyConstraint(StringBuilder createStatementBuilder)
+        {
+            createStatementBuilder.AppendLine("CONSTRAINT " + Escape("PK_" + PrimaryKey.Name) + " PRIMARY KEY CLUSTERED ");
+            createStatementBuilder.AppendLine("( " + Escape(PrimaryKey.Name) + " ASC )");
+            createStatementBuilder.AppendLine("WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]");
+        }
+
+        private void AddPrimaryKeyForSchemaCreate(StringBuilder createStatementBuilder)
+        {
+            createStatementBuilder.AppendLine(Escape(PrimaryKey.Name) + " " + Escape(PrimaryKey.DbType.ToString()) + " IDENTITY(1,1) NOT NULL, ");
+        }
+
+        private void AddRegularColumnsForSchemaCreate(StringBuilder createStatementBuilder)
+        {
+            foreach (var columnInfo in ColumnInfos)
+            {
+                createStatementBuilder.AppendLine(Escape(columnInfo.Name) + " " + Escape(columnInfo.DbType.ToString()) + " NULL, ");
+            }
+        }
     }
 }

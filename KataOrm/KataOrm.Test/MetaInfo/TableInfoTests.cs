@@ -171,5 +171,23 @@ namespace KataOrm.Test.MetaInfo
             Assert.IsTrue(insertStatement.Contains("WHERE [" + tableInfo.Value.PrimaryKey.Name + "] = @"));
         }
 
+        [TestMethod]
+        public void Should_return_a_valid_schema_creation_script_for_a_TableInfo_Entity()
+        {
+            KeyValuePair<Type, TableInfo> tableInfo =
+                    metaInfoStore.TableInfos.Where(x => x.Key.Name == "TableInfoTestsFour").First();
+            string createSchemaScript = tableInfo.Value.GetCreateStatement();
+            
+            Assert.IsTrue(createSchemaScript.Contains("CREATE TABLE [dbo]." + Escape(tableInfo.Value.TableName)));
+            foreach (var columnInfo in tableInfo.Value.ColumnInfos)
+            {
+                Assert.IsTrue(createSchemaScript.Contains(Escape(columnInfo.Name)));
+            }
+        }
+
+        private string Escape(string value)
+        {
+            return "[" + value + "]";
+        }
     }
 }
