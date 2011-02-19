@@ -8,7 +8,7 @@ namespace KataOrm.MetaStore
         public ReferenceInfo(MetaInfoStore metaInfoStore, string name, Type referenceType, PropertyInfo propertyInfo)
             : base(metaInfoStore, name,
                    metaInfoStore.GetTableInfoFor(referenceType).PrimaryKey.DotNetType,
-                   metaInfoStore.GetTableInfoFor(referenceType).PrimaryKey.DbType, propertyInfo)
+                   metaInfoStore.GetTableInfoFor(referenceType).PrimaryKey.DbType, metaInfoStore.GetTableInfoFor(referenceType).PrimaryKey.SqlDbType, propertyInfo)
         {
             ReferenceType = referenceType;
         }

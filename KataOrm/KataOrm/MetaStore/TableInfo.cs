@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 
@@ -25,7 +26,7 @@ namespace KataOrm.MetaStore
             get { return _columns.Values; }
         }
 
-        public IEnumerable<ColumnInfo> References
+        public IEnumerable<ReferenceInfo> References
         {
             get { return _references.Values; }
         }
@@ -190,12 +191,12 @@ namespace KataOrm.MetaStore
         {
             foreach (var reference in References)
             {
-                string constraintName = Escape("FK_" + TableName + "_" + reference.DotNetType.Name);
+                string constraintName = Escape("FK_" + TableName + "_" + reference.ReferenceType.Name);
                 createStatementBuilder.AppendLine("ALTER TABLE [dbo]." + Escape(reference.Name) +
                                                   " WITH CHECK ADD  CONSTRAINT " +
                                                   constraintName + "FOREIGN KEY(" +
                                                   Escape(reference.Name) + ")");
-                createStatementBuilder.AppendLine("REFERENCES [dbo]." + Escape(reference.DotNetType.Name) + " (" + Escape(reference.Name) +")");
+                createStatementBuilder.AppendLine("REFERENCES [dbo]." + Escape(reference.ReferenceType.ToString()) + " (" + Escape(reference.Name) +")");
                 AddGoStatement(createStatementBuilder);
 
                 createStatementBuilder.AppendLine("ALTER TABLE [dbo]." + Escape(TableName) + " CHECK CONSTRAINT " + constraintName);
@@ -207,7 +208,7 @@ namespace KataOrm.MetaStore
         {
             foreach (var reference in References)
             {
-                createStatementBuilder.AppendLine(Escape(reference.Name) + " " + Escape(reference.DbType.ToString()) + " NULL, ");
+                createStatementBuilder.AppendLine(Escape(reference.Name) + " " + Escape(reference.SqlDbType.ToString()) + " NULL, ");
             }
         }
 
@@ -225,14 +226,14 @@ namespace KataOrm.MetaStore
 
         private void AddPrimaryKeyForSchemaCreate(StringBuilder createStatementBuilder)
         {
-            createStatementBuilder.AppendLine(Escape(PrimaryKey.Name) + " " + Escape(PrimaryKey.DbType.ToString()) + " IDENTITY(1,1) NOT NULL, ");
+            createStatementBuilder.AppendLine(Escape(PrimaryKey.Name) + " " + Escape(PrimaryKey.SqlDbType.ToString()) + " IDENTITY(1,1) NOT NULL, ");
         }
 
         private void AddRegularColumnsForSchemaCreate(StringBuilder createStatementBuilder)
         {
             foreach (var columnInfo in ColumnInfos)
             {
-                createStatementBuilder.AppendLine(Escape(columnInfo.Name) + " " + Escape(columnInfo.DbType.ToString()) + " NULL, ");
+                createStatementBuilder.AppendLine(Escape(columnInfo.Name) + " " + Escape(columnInfo.SqlDbType.ToString()) + " NULL, ");
             }
         }
     }

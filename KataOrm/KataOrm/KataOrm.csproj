@@ -44,7 +44,9 @@
     <Compile Include="Attributes\PrimaryKeyAttribute.cs" />
     <Compile Include="Attributes\ReferenceColumnAttribute.cs" />
     <Compile Include="Attributes\TableAttribute.cs" />
+    <Compile Include="Configuration\IConfigurationSettings.cs" />
     <Compile Include="Converter\DbTypeConverter.cs" />
+    <Compile Include="Converter\SqlDbTypeConverter.cs" />
     <Compile Include="Crud\DatabaseAction.cs" />
     <Compile Include="MetaStore\ColumnInfo.cs" />
     <Compile Include="MetaStore\MetaInfo.cs" />

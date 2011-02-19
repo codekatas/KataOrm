@@ -8,18 +8,21 @@ namespace KataOrm.MetaStore
     public class ColumnInfo : MetaInfo
     {
         public ColumnInfo(MetaInfoStore metaInfoStore, string columnName, Type dotNetType, PropertyInfo propertyInfo)
-            : this(metaInfoStore, columnName, dotNetType, DbTypeConverter.ToDbType(dotNetType), propertyInfo)
+            : this(metaInfoStore, columnName, dotNetType, DbTypeConverter.ToDbType(dotNetType), SqlDbTypeConverter.ToDbType(dotNetType), propertyInfo)
         {
         }
 
-        public ColumnInfo(MetaInfoStore metaInfoStore, string columnName, Type dotNetType, DbType dbType,
+        public ColumnInfo(MetaInfoStore metaInfoStore, string columnName, Type dotNetType, DbType dbType, SqlDbType sqlDbType,
                           PropertyInfo propertyInfo) : base(metaInfoStore)
         {
             Name = columnName;
             DotNetType = dotNetType;
             DbType = dbType;
+            SqlDbType = sqlDbType;
             PropertyInfo = propertyInfo;
         }
+
+        public SqlDbType SqlDbType { get; private set; }
 
         public Type DotNetType { get; private set; }
         public DbType DbType { get; private set; }

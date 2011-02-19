@@ -185,6 +185,8 @@ namespace KataOrm.Test.MetaInfo
             }
         }
 
+
+
         private string Escape(string value)
         {
             return "[" + value + "]";
