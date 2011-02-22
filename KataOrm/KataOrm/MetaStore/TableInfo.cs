@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
+using KataOrm.Infrastructure;
 
 namespace KataOrm.MetaStore
 {
@@ -184,6 +185,8 @@ namespace KataOrm.MetaStore
             createStatementBuilder.AppendLine("ON [PRIMARY]");
             AddGoStatement(createStatementBuilder);
             AddForeignKeyConstraints(createStatementBuilder);
+
+            Log.BoundTo(this).Log(createStatementBuilder.ToString());
             return createStatementBuilder.ToString();
         }
 

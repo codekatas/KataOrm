@@ -140,7 +140,6 @@ namespace KataOrm.Test.MetaInfo
 
         }
 
-
         [TestMethod]
         public void Should_return_valid_update_statement_with_correct_parameter_names_for_TableInfo()
         {
@@ -158,7 +157,6 @@ namespace KataOrm.Test.MetaInfo
                 Assert.IsTrue(insertStatement.Contains("@" + referenceColInfo.Name));
             }
         }
-
 
         [TestMethod]
         public void Should_return_valid_update_statement_should_contain_a_valid_where_Clause()
@@ -184,8 +182,6 @@ namespace KataOrm.Test.MetaInfo
                 Assert.IsTrue(createSchemaScript.Contains(Escape(columnInfo.Name)));
             }
         }
-
-
 
         private string Escape(string value)
         {

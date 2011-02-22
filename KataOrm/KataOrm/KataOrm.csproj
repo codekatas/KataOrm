@@ -51,6 +51,13 @@
     <Compile Include="Converter\DbTypeConverter.cs" />
     <Compile Include="Converter\SqlDbTypeConverter.cs" />
     <Compile Include="Crud\DatabaseAction.cs" />
+    <Compile Include="Infrastructure\ICommand.cs" />
+    <Compile Include="Infrastructure\ILogFactory.cs" />
+    <Compile Include="Infrastructure\ILogger.cs" />
+    <Compile Include="Infrastructure\Log.cs" />
+    <Compile Include="Infrastructure\Log4NetLogFactory.cs" />
+    <Compile Include="Infrastructure\TextLogger.cs" />
+    <Compile Include="Infrastructure\TextLoggerFactory.cs" />
     <Compile Include="MetaStore\ColumnInfo.cs" />
     <Compile Include="MetaStore\MetaInfo.cs" />
     <Compile Include="MetaStore\MetaInfoStore.cs" />
