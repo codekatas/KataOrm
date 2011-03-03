@@ -45,6 +45,7 @@
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <CodeAnalysisDependentAssemblyPaths Condition=" '$(VS100COMNTOOLS)' != '' " Include="$(VS100COMNTOOLS)..\IDE\PrivateAssemblies">
@@ -53,16 +54,20 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConcernsHelper\ContextSpecification.cs" />
-    <Compile Include="Extensions\BddExtensions.cs" />
     <Compile Include="Helper\HardCodedTestConfigurationSettings.cs" />
     <Compile Include="Helper\IKataSchemaManager.cs" />
     <Compile Include="Helper\KataSchemaManager.cs" />
     <Compile Include="Helper\TextHelper.cs" />
-    <Compile Include="Log4NetSpecs\Log4NetFactorySpecs.cs" />
+    <Compile Include="Infrastructure\ContainerSpecs\ContainerSpecs.cs" />
+    <Compile Include="Infrastructure\ContainerSpecs\SimpleContainerItemResolverSpecs.cs" />
+    <Compile Include="Infrastructure\ContainerSpecs\SimpleContainerSpecs.cs" />
+    <Compile Include="Infrastructure\Log4NetSpecs\Log4NetFactorySpecs.cs" />
+    <Compile Include="Infrastructure\Log4NetSpecs\Log4NetInitializationCommandSpecs.cs" />
     <Compile Include="MetaInfo\MetaInfoStoreTests.cs" />
     <Compile Include="MetaInfo\TableInfoTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SchemaSetup\AssemblyCreateSchema.cs" />
+    <Compile Include="SpecHelpers\BDDExtensions.cs" />
     <Compile Include="TestData\TableInfoTestData.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -72,9 +77,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <Content Include="Log4net.Config.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -12,16 +12,17 @@ namespace KataOrm.Test.ConcernsHelper
             EstablishContext();
             InitializeSystemUnderTest();
             Because();
-            
         }
 
         protected abstract void Because();
 
-        protected abstract void InitializeSystemUnderTest();
+        protected virtual void InitializeSystemUnderTest(){}
 
-        protected abstract void EstablishContext();
+        protected virtual void EstablishContext(){}
 
-        protected  InterfaceType Dependency<InterfaceType> () where InterfaceType : class
+        protected virtual void AfterEachTest(){}
+
+        protected InterfaceType Dependency<InterfaceType>() where InterfaceType : class
         {
             return MockRepository.GenerateMock<InterfaceType>();
         }
@@ -29,9 +30,8 @@ namespace KataOrm.Test.ConcernsHelper
         [TestCleanup]
         public void ClearDown()
         {
-            
+            AfterEachTest();
         }
-
     }
 
 
@@ -45,6 +45,5 @@ namespace KataOrm.Test.ConcernsHelper
         {
             Sut = CreateSut();
         }
-
     }
 }
