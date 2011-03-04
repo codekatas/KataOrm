@@ -65,6 +65,7 @@ namespace KataOrm.Test.Helper
 
         private void CreateTable(SqlCommand sqlCommand, string tableName, string sqlStatement, List<string> successfullyCreatedTables)
         {
+            var sqlStatementBatches = GetBatchesFromSqlStatement(sqlStatement);
             sqlCommand.CommandText = sqlStatement;
             sqlCommand.ExecuteNonQuery();
             successfullyCreatedTables.Add(tableName);
@@ -83,6 +84,11 @@ namespace KataOrm.Test.Helper
         }
 
         public void DeleteSchema()
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<string> GetBatchesFromSqlStatement(string sqlStatement)
         {
             throw new NotImplementedException();
         }

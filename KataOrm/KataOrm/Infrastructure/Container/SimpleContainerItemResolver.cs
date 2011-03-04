@@ -1,17 +1,17 @@
-using System;
-
 namespace KataOrm.Infrastructure.Container
 {
     public class SimpleContainerItemResolver : IContainerItemResolver
     {
+        private readonly DependencyResolver _resolver;
+
         public SimpleContainerItemResolver(DependencyResolver resolver)
         {
-            throw new NotImplementedException();
+            _resolver = resolver;
         }
 
         public object Resolve()
         {
-            throw new NotImplementedException();
+            return _resolver();
         }
     }
 }

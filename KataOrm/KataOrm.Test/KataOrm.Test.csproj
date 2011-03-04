@@ -57,6 +57,7 @@
     <Compile Include="Helper\HardCodedTestConfigurationSettings.cs" />
     <Compile Include="Helper\IKataSchemaManager.cs" />
     <Compile Include="Helper\KataSchemaManager.cs" />
+    <Compile Include="Helper\KataSchemaManagerSpecs.cs" />
     <Compile Include="Helper\TextHelper.cs" />
     <Compile Include="Infrastructure\ContainerSpecs\ContainerSpecs.cs" />
     <Compile Include="Infrastructure\ContainerSpecs\SimpleContainerItemResolverSpecs.cs" />

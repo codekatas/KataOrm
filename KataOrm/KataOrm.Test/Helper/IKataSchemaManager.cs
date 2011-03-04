@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Collections.Generic;
+using System.Reflection;
 
 namespace KataOrm.Test.Helper
 {
@@ -6,5 +7,6 @@ namespace KataOrm.Test.Helper
     {
         void CreateSchema();
         void DeleteSchema();
+        IEnumerable<string> GetBatchesFromSqlStatement(string sqlStatement);
     }
 }
