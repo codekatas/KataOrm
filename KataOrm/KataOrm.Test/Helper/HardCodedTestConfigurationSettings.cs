@@ -7,7 +7,7 @@ namespace KataOrm.Test.Helper
     {
         public string ConnectionSettings
         {
-            get { return "Data Source=WIN7-64-V8; Trusted_Connection=true; Initial Catalog=KataOrm"; }
+            get { return "Data Source=KATAALAIS; Trusted_Connection=true; Initial Catalog=KataOrm"; }
         }
     }
 }

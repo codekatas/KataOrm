@@ -195,11 +195,11 @@ namespace KataOrm.MetaStore
             foreach (var reference in References)
             {
                 string constraintName = Escape("FK_" + TableName + "_" + reference.ReferenceType.Name);
-                createStatementBuilder.AppendLine("ALTER TABLE [dbo]." + Escape(reference.Name) +
+                createStatementBuilder.AppendLine("ALTER TABLE [dbo]." + Escape(TableName) +
                                                   " WITH CHECK ADD  CONSTRAINT " +
                                                   constraintName + "FOREIGN KEY(" +
                                                   Escape(reference.Name) + ")");
-                createStatementBuilder.AppendLine("REFERENCES [dbo]." + Escape(reference.ReferenceType.ToString()) + " (" + Escape(reference.Name) +")");
+                createStatementBuilder.AppendLine("REFERENCES [dbo]." + Escape(reference.ReferenceType.Name) + " (" + Escape(PrimaryKey.Name) +")");
                 AddGoStatement(createStatementBuilder);
 
                 createStatementBuilder.AppendLine("ALTER TABLE [dbo]." + Escape(TableName) + " CHECK CONSTRAINT " + constraintName);
@@ -222,7 +222,7 @@ namespace KataOrm.MetaStore
 
         private void AddPrimaryKeyConstraint(StringBuilder createStatementBuilder)
         {
-            createStatementBuilder.AppendLine("CONSTRAINT " + Escape("PK_" + PrimaryKey.Name) + " PRIMARY KEY CLUSTERED ");
+            createStatementBuilder.AppendLine("CONSTRAINT " + Escape("PK_" + TableName + "_" + PrimaryKey.Name )  + " PRIMARY KEY CLUSTERED ");
             createStatementBuilder.AppendLine("( " + Escape(PrimaryKey.Name) + " ASC )");
             createStatementBuilder.AppendLine("WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]");
         }

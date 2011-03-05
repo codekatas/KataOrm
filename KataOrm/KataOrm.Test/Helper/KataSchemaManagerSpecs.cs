@@ -1,14 +1,13 @@
-using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Reflection;
-using KataOrm.Infrastructure;
-using KataOrm.Infrastructure.Container;
-using KataOrm.MetaStore;
 using KataOrm.Test.ConcernsHelper;
+using KataOrm.Test.SpecHelpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace KataOrm.Test.Helper
 {
+    [TestClass]
     public class Concerning_Kata_schema_manager : InstanceContextSpecification<IKataSchemaManager>
     {
         private string _sqlStatment;
@@ -33,8 +32,8 @@ namespace KataOrm.Test.Helper
             WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
             )
             ON [PRIMARY]
-            GO";
-
+            GO
+";
         }
 
         protected override void Because()
@@ -50,6 +49,8 @@ namespace KataOrm.Test.Helper
         [TestMethod]
         public void should_return_a_batch_of_3_statments()
         {
+            _result.Count().ShouldBeEqualTo(3);
         }
+
     }
 }

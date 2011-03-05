@@ -22,8 +22,10 @@ namespace KataOrm.Test.SchemaSetup
             simpleContainer.AddResolverFor<ILogFactory>(new SimpleContainerItemResolver(CreateLog4NetFactory));
 
             Container.InitializeWith(simpleContainer);
-            
-            var assembly = Assembly.LoadFrom(@"D:\Development\KataOrm\KataOrm\KataTestAssembly\bin\Debug\KataTestAssembly.dll");
+            var targetAssemblyPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "KataTestAssembly.dll");
+            targetAssemblyPath = targetAssemblyPath.Replace("KataOrm.Test", "KataTestAssembly");
+
+            var assembly = Assembly.LoadFrom(targetAssemblyPath);
             var metaInfoStore = new MetaInfoStore();
             Log.BoundTo(metaInfoStore).Log("Initial binding to test MetaInfoStore");
 
