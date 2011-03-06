@@ -22,7 +22,7 @@ namespace KataOrm.Test.Helper
             _configurationSettings = configurationSettings;
         }
 
-        public List<string> SuccessfullyCreatedTables { get; private set; }
+        public List<string> SuccessfullyCreatedTables { get; set; }
 
         #region IKataSchemaManager Members
 
