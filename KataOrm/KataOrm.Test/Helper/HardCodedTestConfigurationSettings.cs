@@ -9,5 +9,10 @@ namespace KataOrm.Test.Helper
         {
             get { return "Data Source=KATAALAIS; Trusted_Connection=true; Initial Catalog=KataOrm"; }
         }
+
+        public string ConnectionSettingsForMaster
+        {
+            get { return "Data Source=KATAALAIS; Trusted_Connection=true; Initial Catalog=master"; }
+        }
     }
 }

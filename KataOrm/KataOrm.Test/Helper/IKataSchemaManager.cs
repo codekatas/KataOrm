@@ -8,6 +8,6 @@ namespace KataOrm.Test.Helper
         void CreateSchema();
         void DeleteSchema();
         IEnumerable<string> GetBatchesFromSqlStatement(string sqlStatement);
-        List<string> SuccessfullyCreatedTables { get; set; }       
+        List<string> AffectedTables { get; set; }       
     }
 }

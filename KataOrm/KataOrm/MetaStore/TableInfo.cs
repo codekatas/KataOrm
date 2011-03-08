@@ -239,5 +239,10 @@ namespace KataOrm.MetaStore
                 createStatementBuilder.AppendLine(Escape(columnInfo.Name) + " " + Escape(columnInfo.SqlDbType.ToString()) + " NULL, ");
             }
         }
+
+        public string GetDropStatement()
+        {
+            return "Drop table " + TableName;
+        }
     }
 }

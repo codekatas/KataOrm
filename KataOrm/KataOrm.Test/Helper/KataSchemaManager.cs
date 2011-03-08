@@ -16,20 +16,21 @@ namespace KataOrm.Test.Helper
 
         public KataSchemaManager(Assembly assembly, IConfigurationSettings configurationSettings)
         {
-            SuccessfullyCreatedTables = new List<string>();
+            AffectedTables = new List<string>();
             _assembly = assembly;
             _metaInfoStore = new MetaInfoStore();
             _configurationSettings = configurationSettings;
         }
 
-        public List<string> SuccessfullyCreatedTables { get; set; }
+        public List<string> AffectedTables { get; set; }
 
         #region IKataSchemaManager Members
 
         public void CreateSchema()
         {
+            AffectedTables   = new List<string>();
             _metaInfoStore.BuildMetaInfoForAssembly(_assembly);
-            SuccessfullyCreatedTables = new List<string>();
+            AffectedTables = new List<string>();
             using (var connection = new SqlConnection(_configurationSettings.ConnectionSettings))
             {
                 using (var sqlCommand = new SqlCommand())
@@ -40,10 +41,10 @@ namespace KataOrm.Test.Helper
                     foreach (var keyValuePair in _metaInfoStore.TableInfos.Where(x => x.Value.References.Count() == 0))
                     {
                         CreateTable(sqlCommand, keyValuePair.Value.TableName, keyValuePair.Value.GetCreateStatement(),
-                                    SuccessfullyCreatedTables);
+                                    AffectedTables);
                     }
 
-                    CreateTablesWithReferences(sqlCommand, SuccessfullyCreatedTables);
+                    CreateTablesWithReferences(sqlCommand, AffectedTables);
                 }
                 connection.Close();
             }
@@ -51,8 +52,35 @@ namespace KataOrm.Test.Helper
 
         public void DeleteSchema()
         {
-            throw new NotImplementedException();
+            AffectedTables = new List<string>();
+            using (var connection = new SqlConnection(_configurationSettings.ConnectionSettings))
+            {
+                using (var sqlCommand = new SqlCommand())
+                {
+                    sqlCommand.Connection = connection;
+                    sqlCommand.Connection.Open();
+
+                    foreach (var keyValuePair in _metaInfoStore.TableInfos.Where(x => x.Value.References.Count() > 0))
+                    {
+                        DeleteTable(sqlCommand, keyValuePair.Value.TableName, keyValuePair.Value.GetDropStatement(),
+                                    AffectedTables);
+                    }
+                    foreach (var keyValuePair in _metaInfoStore.TableInfos.Where(x => x.Value.References.Count() == 0))
+                    {
+                        DeleteTable(sqlCommand, keyValuePair.Value.TableName, keyValuePair.Value.GetDropStatement(),
+                                    AffectedTables);
+                    }
+                }
+            }
         }
+
+        private void DeleteTable(SqlCommand sqlCommand, string tableName, string deleteStatement, List<string> successfullyCreatedTables)
+        {
+            sqlCommand.CommandText = deleteStatement;
+            sqlCommand.ExecuteNonQuery();
+            successfullyCreatedTables.Remove(tableName);
+        }
+
 
         public IEnumerable<string> GetBatchesFromSqlStatement(string sqlStatement)
         {
@@ -70,20 +98,37 @@ namespace KataOrm.Test.Helper
 
         #endregion
 
-        private void CreateTablesWithReferences(SqlCommand sqlCommand, List<string> successfullyCreatedTables)
+
+        private void DropTablesWithReferences(SqlCommand sqlCommand, List<string> affectedTables)
         {
             foreach (var tableInfo in _metaInfoStore.TableInfos.Where(x => x.Value.References.Count() > 0))
             {
-                if (TableInfoHasMissingRefTables(successfullyCreatedTables, tableInfo) == false)
+                if (TableInfoHasMissingRefTables(affectedTables, tableInfo) == false)
+                {
+                    DeleteTable(sqlCommand, tableInfo.Value.TableName, tableInfo.Value.GetCreateStatement(),
+                                affectedTables);
+                }
+            }
+            if (affectedTables.Count < _metaInfoStore.TableInfos.Count())
+            {
+                DropTablesWithReferences(sqlCommand, affectedTables);
+            }
+        }
+
+        private void CreateTablesWithReferences(SqlCommand sqlCommand, List<string> affectedTables)
+        {
+            foreach (var tableInfo in _metaInfoStore.TableInfos.Where(x => x.Value.References.Count() > 0))
+            {
+                if (TableInfoHasMissingRefTables(affectedTables, tableInfo) == false)
                 {
                     //Create the table
                     CreateTable(sqlCommand, tableInfo.Value.TableName, tableInfo.Value.GetCreateStatement(),
-                                successfullyCreatedTables);
+                                affectedTables);
                 }
             }
-            if (successfullyCreatedTables.Count < _metaInfoStore.TableInfos.Count())
+            if (affectedTables.Count < _metaInfoStore.TableInfos.Count())
             {
-                CreateTablesWithReferences(sqlCommand, successfullyCreatedTables);
+                CreateTablesWithReferences(sqlCommand, affectedTables);
             }
         }
 

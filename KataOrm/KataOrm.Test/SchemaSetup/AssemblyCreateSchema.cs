@@ -14,21 +14,25 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace KataOrm.Test.SchemaSetup
 {
-
-    public abstract class Concerning_Kata_Schema_Manager : InstanceContextSpecification<IKataSchemaManager>
+    [TestClass]
+    public class Concerning_Kata_Schema_Manager : InstanceContextSpecification<IKataSchemaManager>
     {
         private Assembly _assembly;
         private MetaInfoStore _metaInfoStore;
+
+        protected override void Because()
+        {
+        }
 
         protected override void EstablishContext()
         {
             base.EstablishContext();
 
-            SimpleContainer simpleContainer = new SimpleContainer(new Dictionary<Type, IContainerItemResolver>());
+            var simpleContainer = new SimpleContainer(new Dictionary<Type, IContainerItemResolver>());
             simpleContainer.AddResolverFor<ILogFactory>(new SimpleContainerItemResolver(CreateLog4NetFactory));
 
             Container.InitializeWith(simpleContainer);
-            var targetAssemblyPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "KataTestAssembly.dll");
+            string targetAssemblyPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "KataTestAssembly.dll");
             targetAssemblyPath = targetAssemblyPath.Replace("KataOrm.Test", "KataTestAssembly");
 
             _assembly = Assembly.LoadFrom(targetAssemblyPath);
@@ -42,7 +46,6 @@ namespace KataOrm.Test.SchemaSetup
         {
             return new KataSchemaManager(_assembly, new HardCodedTestConfigurationSettings());
         }
-
 
         private object CreateLog4NetFactory()
         {
@@ -61,24 +64,36 @@ namespace KataOrm.Test.SchemaSetup
         public void Should_create_schema_table_for_each_Table_info_entity_in_assembly_when_asked_to()
         {
             Sut.CreateSchema();
-            Assert.IsTrue(Sut.SuccessfullyCreatedTables.Count == _metaInfoStore.TableInfos.Count);                    
+            Assert.IsTrue(Sut.AffectedTables.Count == _metaInfoStore.TableInfos.Count);
+            Sut.DeleteSchema();
         }
 
         [TestMethod]
         public void Should_delete_all_schema_from_database_when_asked_to()
         {
-           Sut.DeleteSchema();
-           GetSchemaObjectCount().ShouldBeEqualTo(0);
+            Sut.CreateSchema();
+            Sut.DeleteSchema();
+            GetSchemaObjectCount().ShouldBeEqualTo(0);
         }
 
         private int GetSchemaObjectCount()
         {
-
-            var connection = new SqlConnection(new HardCodedTestConfigurationSettings().ConnectionSettings);
-            using(var command = new SqlCommand())
+            var connection = new SqlConnection(new HardCodedTestConfigurationSettings().ConnectionSettingsForMaster);
+            int tablesExisting = 0;
+            using (var sqlCommand = new SqlCommand())
             {
-                
+                sqlCommand.Connection = connection;
+                sqlCommand.Connection.Open();
+
+                foreach (var tableInfo in _metaInfoStore.TableInfos)
+                {
+                    sqlCommand.CommandText = "select count(*) from  sys.objects where name =  '" + tableInfo.Value.TableName + "'";
+
+                    tablesExisting += Convert.ToInt32(sqlCommand.ExecuteScalar());
+                }
+                sqlCommand.Connection.Close();
             }
+            return tablesExisting;
         }
     }
 
@@ -90,23 +105,23 @@ namespace KataOrm.Test.SchemaSetup
         public void Should_create_SQL_Server_tables_for_each_TableInfo_entity_in_Assembly()
         {
             //Initialize logging
-            SimpleContainer simpleContainer  = new SimpleContainer(new Dictionary<Type, IContainerItemResolver>());
+            var simpleContainer = new SimpleContainer(new Dictionary<Type, IContainerItemResolver>());
             simpleContainer.AddResolverFor<ILogFactory>(new SimpleContainerItemResolver(CreateLog4NetFactory));
 
             Container.InitializeWith(simpleContainer);
-            var targetAssemblyPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "KataTestAssembly.dll");
+            string targetAssemblyPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "KataTestAssembly.dll");
             targetAssemblyPath = targetAssemblyPath.Replace("KataOrm.Test", "KataTestAssembly");
 
-            var assembly = Assembly.LoadFrom(targetAssemblyPath);
+            Assembly assembly = Assembly.LoadFrom(targetAssemblyPath);
             var metaInfoStore = new MetaInfoStore();
             Log.BoundTo(metaInfoStore).Log("Initial binding to test MetaInfoStore");
 
             metaInfoStore.BuildMetaInfoForAssembly(assembly);
 
-            var kataSchemaManager = new KataSchemaManager(assembly,new HardCodedTestConfigurationSettings());
+            var kataSchemaManager = new KataSchemaManager(assembly, new HardCodedTestConfigurationSettings());
             kataSchemaManager.CreateSchema();
 
-            Assert.IsTrue(kataSchemaManager.SuccessfullyCreatedTables.Count == metaInfoStore.TableInfos.Count);
+            Assert.IsTrue(kataSchemaManager.AffectedTables.Count == metaInfoStore.TableInfos.Count);
         }
 
         private object CreateLog4NetFactory()
@@ -126,6 +141,5 @@ namespace KataOrm.Test.SchemaSetup
         {
             return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "log.txt");
         }
-
     }
 }
