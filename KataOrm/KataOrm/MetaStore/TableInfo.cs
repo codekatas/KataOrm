@@ -26,12 +26,11 @@ namespace KataOrm.MetaStore
         {
             get { return _columns.Values; }
         }
-
+        
         public IEnumerable<ReferenceInfo> References
         {
             get { return _references.Values; }
         }
-
 
         public void AddColumn(ColumnInfo columnInfo)
         {
@@ -75,12 +74,10 @@ namespace KataOrm.MetaStore
             }
         }
 
-
         private void RemoveLastCharacters(StringBuilder stringBuilder, int numberOfCharacters)
         {
             stringBuilder.Remove(stringBuilder.Length - numberOfCharacters, numberOfCharacters);
         }
-
 
         private void AddReferenceColumns(StringBuilder selectBuilder)
         {
@@ -133,7 +130,6 @@ namespace KataOrm.MetaStore
                 insertStatementBuilder.Append("@" + columnInfo.Name + ", ");
             }
         }
-
 
         public string GetUpdateStatement()
         {

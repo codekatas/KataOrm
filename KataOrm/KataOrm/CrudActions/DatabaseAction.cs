@@ -1,7 +1,7 @@
 using System.Data.SqlClient;
 using KataOrm.MetaStore;
 
-namespace KataOrm.Crud
+namespace KataOrm.CrudActions
 {
     public abstract class DatabaseAction
     {

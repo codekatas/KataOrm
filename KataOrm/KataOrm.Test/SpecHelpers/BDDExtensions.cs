@@ -25,7 +25,6 @@ namespace KataOrm.Test.SpecHelpers
             Assert.IsNotNull(item);
         }
         
-
         public static void ShouldBeAnInstanceOf<Type>(this object Item )
         {
             Assert.IsInstanceOfType(Item, typeof(Type));

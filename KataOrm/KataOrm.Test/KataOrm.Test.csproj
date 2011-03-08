@@ -53,11 +53,13 @@
     </CodeAnalysisDependentAssemblyPaths>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Actions\InsertActionSpecs.cs" />
     <Compile Include="ConcernsHelper\ContextSpecification.cs" />
     <Compile Include="Helper\HardCodedTestConfigurationSettings.cs" />
     <Compile Include="Helper\IKataSchemaManager.cs" />
     <Compile Include="Helper\KataSchemaManager.cs" />
     <Compile Include="Helper\KataSchemaManagerSpecs.cs" />
+    <Compile Include="Helper\TestBase.cs" />
     <Compile Include="Helper\TextHelper.cs" />
     <Compile Include="Infrastructure\ContainerSpecs\ContainerSpecs.cs" />
     <Compile Include="Infrastructure\ContainerSpecs\SimpleContainerItemResolverSpecs.cs" />
@@ -75,6 +77,10 @@
     <ProjectReference Include="..\KataOrm\KataOrm.csproj">
       <Project>{D1F56DE2-D300-4F33-A055-B1DD0E5BDC6C}</Project>
       <Name>KataOrm</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\KataTestAssembly\KataTestAssembly.csproj">
+      <Project>{6A7F564E-5686-49C4-B187-0C4F9CB2B26F}</Project>
+      <Name>KataTestAssembly</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
