@@ -85,6 +85,11 @@ namespace KataOrm.MetaStore
             return attributes[0] as T;
         }
 
+        public TableInfo GetTableInfoFor<T>()
+        {
+            return GetTableInfoFor(typeof (T));
+        }
+
         public TableInfo GetTableInfoFor(Type referenceType)
         {
             if (!TableInfos.ContainsKey(referenceType))

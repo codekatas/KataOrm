@@ -12,7 +12,14 @@ namespace KataOrm.CrudActions
 
         public TEntity Insert<TEntity>(TEntity entity)
         {
-            throw new NotImplementedException();
+            using (var command = CreateSqlCommand())
+            {
+                var tableInfo = MetaInfoStore.GetTableInfoFor<TEntity>();
+                command.CommandText = tableInfo.GetInsertStatement();
+
+
+            }
+            throw new MethodAccessException();
         }
     }
 }

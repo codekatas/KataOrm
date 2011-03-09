@@ -11,6 +11,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace KataOrm.Test.Actions
 {
+    [TestClass]
     public class InsertActionSpecs : InstanceContextSpecification<IInsertAction>
     {
         private SqlConnection _connection;
