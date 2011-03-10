@@ -71,6 +71,7 @@
     <Compile Include="Infrastructure\Log4NetLogFactory.cs" />
     <Compile Include="Infrastructure\TextLogger.cs" />
     <Compile Include="Infrastructure\TextLoggerFactory.cs" />
+    <Compile Include="MetaStore\AdoParameterInfo.cs" />
     <Compile Include="MetaStore\ColumnInfo.cs" />
     <Compile Include="MetaStore\MetaInfo.cs" />
     <Compile Include="MetaStore\MetaInfoStore.cs" />

@@ -67,6 +67,7 @@
     <Compile Include="Infrastructure\Log4NetSpecs\Log4NetFactorySpecs.cs" />
     <Compile Include="Infrastructure\Log4NetSpecs\Log4NetInitializationCommandSpecs.cs" />
     <Compile Include="MetaInfo\MetaInfoStoreTests.cs" />
+    <Compile Include="MetaInfo\TableInfoSpecs.cs" />
     <Compile Include="MetaInfo\TableInfoTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SchemaSetup\AssemblyCreateSchema.cs" />

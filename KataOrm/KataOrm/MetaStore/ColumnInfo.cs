@@ -26,7 +26,7 @@ namespace KataOrm.MetaStore
 
         public Type DotNetType { get; private set; }
         public DbType DbType { get; private set; }
-        protected PropertyInfo PropertyInfo { get; private set; }
+        public PropertyInfo PropertyInfo { get; private set; }
         public string Name { get; private set; }
     }
 }

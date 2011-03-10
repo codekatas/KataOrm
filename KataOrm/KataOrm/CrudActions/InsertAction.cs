@@ -17,7 +17,10 @@ namespace KataOrm.CrudActions
                 var tableInfo = MetaInfoStore.GetTableInfoFor<TEntity>();
                 command.CommandText = tableInfo.GetInsertStatement();
 
-
+                foreach (var VARIABLE in tableInfo.GetParametersForInsert(entity))
+                {
+                    
+                }
             }
             throw new MethodAccessException();
         }

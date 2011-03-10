@@ -1,6 +1,6 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using System.Text;
 using KataOrm.Infrastructure;
@@ -239,6 +239,41 @@ namespace KataOrm.MetaStore
         public string GetDropStatement()
         {
             return "Drop table " + TableName;
+        }
+
+
+        public List<AdoParameterInfo> GetParametersForInsert(object entity)
+        {
+            return GetParametersForReferenceAndRegularColumns(entity);
+        }
+
+        private List<AdoParameterInfo> GetParametersForReferenceAndRegularColumns(object entity)
+        {
+            var parameters = new List<AdoParameterInfo>();
+
+            foreach (var referenceInfo in References)
+            {
+                var referencedEntity = referenceInfo.PropertyInfo.GetValue(entity, null);
+                var referencePrimaryKeyProperty = MetaInfoStore.GetTableInfoFor(referenceInfo.ReferenceType).PrimaryKey.PropertyInfo;
+                if(referencedEntity == null)
+                {
+                    parameters.Add(new AdoParameterInfo(referenceInfo.Name, referenceInfo.DbType, null));
+                }
+                else
+                {
+                    parameters.Add(new AdoParameterInfo(referenceInfo.Name, referenceInfo.DbType, referencePrimaryKeyProperty.GetValue(referencedEntity,null)));    
+                }
+
+            }
+
+            foreach (var columnInfo in ColumnInfos)
+            {
+                var memberType = columnInfo.PropertyInfo.MemberType;
+                var val = columnInfo.PropertyInfo.GetValue(entity, null);
+
+                parameters.Add(new AdoParameterInfo(columnInfo.Name,columnInfo.DbType,columnInfo.PropertyInfo.GetValue(entity,null)));
+            }
+            return parameters;
         }
     }
 }
