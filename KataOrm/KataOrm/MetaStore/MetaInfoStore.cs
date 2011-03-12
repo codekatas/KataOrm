@@ -21,7 +21,7 @@ namespace KataOrm.MetaStore
                 Attribute[] attributes = Attribute.GetCustomAttributes(type, typeof (TableAttribute));
                 if (attributes.Length > 0)
                 {
-                    var attribute = attributes[0] as TableAttribute;
+                    var attribute = (TableAttribute) attributes[0];
                     var tableInfo = new TableInfo(this, attribute.TableName, type);
                     TableInfos.Add(type, tableInfo);
                 }

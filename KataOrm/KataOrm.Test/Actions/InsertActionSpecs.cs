@@ -27,7 +27,7 @@ namespace KataOrm.Test.Actions
 
             _productToSave = new Product()
                                  {
-                                     Name = "First Product",
+                                     ProductName = "First Product",
                                      Description = "Product Description",
                                      SellStartDate = DateTime.Now,
                                      SellEndDate = DateTime.Now.AddYears(1)

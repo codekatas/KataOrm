@@ -9,8 +9,8 @@ namespace KataTestAssembly
         [PrimaryKey("ID")]
         public int Id { get; set; }
 
-        [Column("Name")]
-        public string Name { get; set; }
+        [Column("ProductName")]
+        public string ProductName { get; set; }
 
         [Column("Description")]
         public string Description { get; set; }
